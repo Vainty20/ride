@@ -19,6 +19,7 @@ export default function DriverTable({ drivers, handleApproved }) {
 
   const sendSchedule = async (email) => {
     try {
+      const selectedDate = selectedDates[email];
       if (!selectedDate) {
         alert("Please select a date");
         return;
