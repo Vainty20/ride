@@ -1,14 +1,16 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { 
+import {
+  IoPersonCircleOutline,
   IoHomeOutline,
   IoBookOutline,
   IoBicycleOutline,
-  IoPersonOutline ,
+  IoPersonOutline,
   IoAlertCircleOutline,
- } from "react-icons/io5";
+  IoExitOutline,
+} from "react-icons/io5";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -17,27 +19,27 @@ export default function Sidebar() {
   const sidebarRoutes = [
     {
       name: "Dashboard",
-      icon: <IoHomeOutline/>,
+      icon: <IoHomeOutline />,
       path: "/home",
     },
     {
       name: "Books",
-      icon: <IoBookOutline/>,
+      icon: <IoBookOutline />,
       path: "/home/books",
     },
     {
       name: "Drivers",
-      icon: <IoBicycleOutline/>,
+      icon: <IoBicycleOutline />,
       path: "/home/drivers",
     },
     {
       name: "Users",
-      icon: <IoPersonOutline  />,
+      icon: <IoPersonOutline />,
       path: "/home/users",
     },
     {
       name: "Reports",
-      icon: <IoAlertCircleOutline  />,
+      icon: <IoAlertCircleOutline />,
       path: "/home/reports",
     },
   ];
@@ -51,31 +53,40 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="flex flex-col justify-between bg-gray-200 min-h-screen p-2 w-full max-w-[200px]">
+    <aside className="flex flex-col justify-between bg-gray-200 min-h-screen p-2 w-full max-w-[50px] xl:max-w-[200px]">
       <div>
-        <div className="p-2 flex flex-row gap-2">
-          <h1 className="text-xl font-bold text-gray-600 mb-3">Ridemoto Admin</h1>
+        <div className="p-2 flex items-center flex-row gap-2">
+          <IoPersonCircleOutline className="text-gray-600 text-xl" size={60}/>
+          <h1 className="hidden xl:block text-lg font-bold text-gray-600 mb-3">
+            Ridemoto Admin
+          </h1>
         </div>
         <nav>
           <ul>
             {sidebarRoutes.map((route, index) => (
               <li key={index} className="list-none">
-                <Link 
+                <Link
                   to={route.path}
                   className={`flex gap-2 items-center justify-start p-2 text-xl rounded-md ${
-                    location.pathname === route.path ? 'bg-gray-700 text-white' : '' 
+                    location.pathname === route.path
+                      ? "bg-gray-700 text-white"
+                      : ""
                   } text-gray-700 `}
                 >
                   {route.icon}
-                  {route.name}
+                  <span className="hidden xl:block">{route.name}</span>
                 </Link>
               </li>
             ))}
           </ul>
         </nav>
       </div>
-      <button className='w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' onClick={handleLogout}>
-        Logout
+      <button
+        className="w-full bg-red-500 hover:bg-red-700 text-white font-bold flex items-center p-2 rounded gap-2"
+        onClick={handleLogout}
+      >
+        <IoExitOutline/>
+        <span className="hidden xl:block">Logout</span>
       </button>
     </aside>
   );

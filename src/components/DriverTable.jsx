@@ -49,7 +49,7 @@ export default function DriverTable({ drivers, handleApproved }) {
   };
 
   return (
-    <>
+    <div className="overflow-auto">
       <table className="min-w-full divide-y divide-gray-200 rounded-lg">
         <thead>
           <tr>
@@ -140,6 +140,6 @@ export default function DriverTable({ drivers, handleApproved }) {
           ))}
         </tbody>
       </table>
-    </>
+    </div>
   );
 }
