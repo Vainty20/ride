@@ -5,7 +5,7 @@ export default function HomeLayout() {
   return (
     <div className="flex h-screen bg-gray-700 text-white overflow-hidden">
       <Sidebar />
-      <main>
+      <main className="w-full">
         <Outlet />
       </main>
     </div>
