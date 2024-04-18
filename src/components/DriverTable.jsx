@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import sendEmail from "../utils/sendEmail";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
 export default function DriverTable({ drivers, handleApproved }) {
   const [selectedDates, setSelectedDates] = useState({});
 
@@ -20,7 +19,6 @@ export default function DriverTable({ drivers, handleApproved }) {
 
   const sendSchedule = async (email) => {
     try {
-      const selectedDate = selectedDates[email];
       if (!selectedDate) {
         alert("Please select a date");
         return;
@@ -74,7 +72,7 @@ export default function DriverTable({ drivers, handleApproved }) {
         <tbody className="bg-white divide-y divide-gray-200">
           {drivers.map((driver, index) => (
             <tr key={index}>
-              <td className="flex justify-center items-center px-6 py-4 whitespace-nowrap">
+              <td className="flex justify-center items-centerpx-6 py-4 whitespace-nowrap">
                 <img
                   className="w-[60px] h-[60px] rounded-full"
                   src={
@@ -88,7 +86,32 @@ export default function DriverTable({ drivers, handleApproved }) {
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="text-sm text-gray-900">{driver.firstName}</div>
               </td>
-              {/* Other table cells */}
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div className="text-sm text-gray-900">{driver.lastName}</div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div className="text-sm text-gray-900">
+                  {driver.phoneNumber}
+                </div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div className="text-sm text-gray-900">
+                  {driver.motorcycleModel}
+                </div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div className="text-sm text-gray-900">
+                  {driver.motorcycleRegNo}
+                </div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div className="text-sm text-gray-900">{driver.maxLoad} kg</div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div className="text-sm text-gray-900">
+                  {driver.isApprovedDriver ? "true" : "false"}
+                </div>
+              </td>
               <td className="flex gap-2 px-6 py-4 whitespace-nowrap">
                 <Link
                   className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
