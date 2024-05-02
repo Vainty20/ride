@@ -17,8 +17,18 @@ import RecentUsers from "../components/RecentUsers";
 import RecentDrivers from "../components/RecentDrivers";
 
 const monthNames = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 
 export default function DashboardScreen() {
@@ -30,7 +40,6 @@ export default function DashboardScreen() {
   const [totalAppIncome, setTotalAppIncome] = useState(0);
   const [totalDriverIncome, setTotalDriverIncome] = useState(0);
 
- 
   useEffect(() => {
     const incomeData = {};
 
@@ -78,13 +87,13 @@ export default function DashboardScreen() {
     const aggregatedData = {};
 
     drivers.forEach((driver) => {
-      const createdAt = driver.createdAt ? new Date(driver.createdAt) : null;
+      const createdAt = driver.timestamp ? new Date(driver.timestamp) : null;
       const monthYear = createdAt
-        ? createdAt.toLocaleString("default", {
+        ? createdAt.toLocaleString("en-US", {
             month: "long",
             year: "numeric",
           })
-        : "April";
+        : "May 2024";
 
       if (aggregatedData[monthYear]) {
         aggregatedData[monthYear]++;
@@ -103,13 +112,13 @@ export default function DashboardScreen() {
     const aggregatedData = {};
 
     users.forEach((user) => {
-      const createdAt = user.createdAt ? new Date(user.createdAt) : null;
+      const createdAt = user.timestamp ? new Date(user.timestamp) : null;
       const monthYear = createdAt
-        ? createdAt.toLocaleString("default", {
+        ? createdAt.toLocaleString("en-US", {
             month: "long",
             year: "numeric",
           })
-        : "April";
+        : "May 2024";
 
       if (aggregatedData[monthYear]) {
         aggregatedData[monthYear]++;
@@ -128,13 +137,13 @@ export default function DashboardScreen() {
     const aggregatedData = {};
 
     books.forEach((book) => {
-      const createdAt = book.createdAt ? new Date(book.createdAt) : null;
+      const createdAt = book.timestamp ? new Date(book.timestamp) : null;
       const monthYear = createdAt
-        ? createdAt.toLocaleString("default", {
+        ? createdAt.toLocaleString("en-US", {
             month: "long",
             year: "numeric",
           })
-        : "April";
+        : null;
 
       if (aggregatedData[monthYear]) {
         aggregatedData[monthYear]++;
@@ -161,7 +170,9 @@ export default function DashboardScreen() {
 
       <div className="w-full bg-gray-200 rounded-lg p-3 mb-6">
         <div className="flex items-center justify-between mb-2">
-          <h2 className="text-xl font-semibold text-gray-700">Ridemoto's Income</h2>
+          <h2 className="text-xl font-semibold text-gray-700">
+            Ridemoto's Income
+          </h2>
           <div className="flex gap-3">
             <div className="text-gray-700">
               Total Income: <strong>₱{totalIncome.toFixed(2)}</strong>
@@ -170,7 +181,8 @@ export default function DashboardScreen() {
               Total App Income: <strong>₱{totalAppIncome.toFixed(2)}</strong>
             </div>
             <div className="text-gray-700">
-              Total Driver Income: <strong>₱{totalDriverIncome.toFixed(2)}</strong>
+              Total Driver Income:{" "}
+              <strong>₱{totalDriverIncome.toFixed(2)}</strong>
             </div>
           </div>
         </div>
