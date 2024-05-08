@@ -4,6 +4,8 @@ import useFetchAllUsersData from "../hooks/useFetchAllUsersData";
 import useFetchAllDriversData from "../hooks/useFetchAllDriversData";
 import useFetchAllBooksData from "../hooks/useFetchAllBooksData";
 import {
+  PieChart,
+  Pie,
   BarChart,
   Bar,
   XAxis,
@@ -39,6 +41,9 @@ export default function DashboardScreen() {
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalAppIncome, setTotalAppIncome] = useState(0);
   const [totalDriverIncome, setTotalDriverIncome] = useState(0);
+  const [aggregatedDriversByMonth, setAggregatedDriversByMonth] = useState([]);
+  const [aggregatedUsersByMonth, setAggregatedUsersByMonth] = useState([]);
+  const [aggregatedBooksByMonth, setAggregatedBooksByMonth] = useState([]);
 
   useEffect(() => {
     const incomeData = {};
@@ -83,85 +88,35 @@ export default function DashboardScreen() {
     setTotalDriverIncome(driverIncome);
   }, [books]);
 
-  const aggregateDriverDataByMonth = () => {
-    const aggregatedData = {};
+  useEffect(() => {
+    const aggregateDataByMonth = (data) => {
+      const aggregatedData = {};
 
-    drivers.forEach((driver) => {
-      const createdAt = driver.timestamp ? new Date(driver.timestamp) : null;
-      const monthYear = createdAt
-        ? createdAt.toLocaleString("en-US", {
-            month: "long",
-            year: "numeric",
-          })
-        : "May 2024";
+      data.forEach((item) => {
+        const monthYearKey = `${new Date(item.timestamp).getFullYear()}-${
+          new Date(item.timestamp).getMonth() + 1
+        }`;
+        if (aggregatedData[monthYearKey]) {
+          aggregatedData[monthYearKey]++;
+        } else {
+          aggregatedData[monthYearKey] = 1;
+        }
+      });
 
-      if (aggregatedData[monthYear]) {
-        aggregatedData[monthYear]++;
-      } else {
-        aggregatedData[monthYear] = 1;
-      }
-    });
+      return Object.keys(aggregatedData).map((monthYear) => ({
+        month: monthNames[parseInt(monthYear.split("-")[1]) - 1],
+        count: aggregatedData[monthYear],
+      }));
+    };
 
-    return Object.keys(aggregatedData).map((month) => ({
-      month,
-      count: aggregatedData[month],
-    }));
-  };
+    const aggregatedDrivers = aggregateDataByMonth(drivers);
+    const aggregatedUsers = aggregateDataByMonth(users);
+    const aggregatedBooks = aggregateDataByMonth(books);
 
-  const aggregateUserDataByMonth = () => {
-    const aggregatedData = {};
-
-    users.forEach((user) => {
-      const createdAt = user.timestamp ? new Date(user.timestamp) : null;
-      const monthYear = createdAt
-        ? createdAt.toLocaleString("en-US", {
-            month: "long",
-            year: "numeric",
-          })
-        : "May 2024";
-
-      if (aggregatedData[monthYear]) {
-        aggregatedData[monthYear]++;
-      } else {
-        aggregatedData[monthYear] = 1;
-      }
-    });
-
-    return Object.keys(aggregatedData).map((month) => ({
-      month,
-      count: aggregatedData[month],
-    }));
-  };
-
-  const aggregateBookDataByMonth = () => {
-    const aggregatedData = {};
-
-    books.forEach((book) => {
-      const createdAt = book.timestamp ? new Date(book.timestamp) : null;
-      const monthYear = createdAt
-        ? createdAt.toLocaleString("en-US", {
-            month: "long",
-            year: "numeric",
-          })
-        : null;
-
-      if (aggregatedData[monthYear]) {
-        aggregatedData[monthYear]++;
-      } else {
-        aggregatedData[monthYear] = 1;
-      }
-    });
-
-    return Object.keys(aggregatedData).map((month) => ({
-      month,
-      count: aggregatedData[month],
-    }));
-  };
-
-  const aggregatedDriversByMonth = aggregateDriverDataByMonth();
-  const aggregatedUsersByMonth = aggregateUserDataByMonth();
-  const aggregatedBooksByMonth = aggregateBookDataByMonth();
-
+    setAggregatedDriversByMonth(aggregatedDrivers);
+    setAggregatedUsersByMonth(aggregatedUsers);
+    setAggregatedBooksByMonth(aggregatedBooks);
+  }, [drivers, users, books]);
   if (loadingUser && loadingDriver && loadingBook) return <Loading />;
 
   return (
@@ -207,55 +162,62 @@ export default function DashboardScreen() {
           <h2 className="text-xl font-semibold mb-2 text-gray-700">
             Drivers by Month
           </h2>
-
           <ResponsiveContainer width="100%" height={400}>
-            <BarChart
-              data={aggregatedDriversByMonth}
-              margin={{ top: 5, right: 40, left: 40, bottom: 10 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
+            <PieChart>
+              <Pie
+                dataKey="count"
+                data={aggregatedDriversByMonth}
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+                fill="#8884d8"
+                label
+              />
               <Tooltip />
               <Legend />
-              <Bar dataKey="count" fill="#8884d8" />
-            </BarChart>
+            </PieChart>
           </ResponsiveContainer>
         </div>
+
         <div className="w-full bg-gray-200 rounded-lg p-3 mb-6">
           <h2 className="text-xl font-semibold mb-2 text-gray-700">
             Users by Month
           </h2>
           <ResponsiveContainer width="100%" height={400}>
-            <BarChart
-              data={aggregatedUsersByMonth}
-              margin={{ top: 5, right: 40, left: 40, bottom: 10 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
+            <PieChart>
+              <Pie
+                dataKey="count"
+                data={aggregatedUsersByMonth}
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+                fill="#82ca9d"
+                label
+              />
               <Tooltip />
               <Legend />
-              <Bar dataKey="count" fill="#8884d8" />
-            </BarChart>
+            </PieChart>
           </ResponsiveContainer>
         </div>
+
         <div className="w-full bg-gray-200 rounded-lg p-3 mb-6">
           <h2 className="text-xl font-semibold mb-2 text-gray-700">
             Books by Month
           </h2>
           <ResponsiveContainer width="100%" height={400}>
-            <BarChart
-              data={aggregatedBooksByMonth}
-              margin={{ top: 5, right: 40, left: 40, bottom: 10 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
+            <PieChart>
+              <Pie
+                dataKey="count"
+                data={aggregatedBooksByMonth}
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+                fill="#ffc658"
+                label
+              />
               <Tooltip />
               <Legend />
-              <Bar dataKey="count" fill="#8884d8" />
-            </BarChart>
+            </PieChart>
           </ResponsiveContainer>
         </div>
       </div>

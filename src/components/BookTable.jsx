@@ -2,11 +2,11 @@ import { Link } from "react-router-dom";
 
 export default function BookTable({ books, handleDelete }) {
   const categories = [
+    { title: "Name" },
+    { title: "Date" },
     { title: "Pickup Location" },
     { title: "Dropoff Location" },
-    { title: "User Name" },
     { title: "Status" },
-    { title: "Date" },
   ];
 
   const formatDate = (timestamp) => {
@@ -42,16 +42,21 @@ export default function BookTable({ books, handleDelete }) {
         {books.map((book, index) => (
           <tr key={index}>
             <td className="px-6 py-4 whitespace-nowrap">
+              <div className="text-sm text-gray-900">
+                {book.userfirstName} {book.userlastName}
+              </div>
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap">
+              <div className="text-sm text-gray-900">
+                {formatDate(book.timestamp)}
+              </div>
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap">
               <div className="text-sm text-gray-900">{book.pickupLocation}</div>
             </td>
             <td className="px-6 py-4 whitespace-nowrap">
               <div className="text-sm text-gray-900">
                 {book.dropoffLocation}
-              </div>
-            </td>
-            <td className="px-6 py-4 whitespace-nowrap">
-              <div className="text-sm text-gray-900">
-                {book.userfirstName} {book.userlastName}
               </div>
             </td>
             <td className="px-6 py-4 whitespace-nowrap">
@@ -63,11 +68,6 @@ export default function BookTable({ books, handleDelete }) {
                   : book.driverId
                   ? "Confirmed"
                   : "Waiting"}{" "}
-              </div>
-            </td>
-            <td className="px-6 py-4 whitespace-nowrap">
-              <div className="text-sm text-gray-900">
-                {formatDate(book.timestamp)}
               </div>
             </td>
             <td className="flex gap-2 px-6 py-4 whitespace-nowrap">

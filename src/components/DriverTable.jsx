@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import sendEmail from "../utils/sendEmail";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+
 export default function DriverTable({ drivers, handleApproved }) {
+  const location = useLocation();
   const [selectedDates, setSelectedDates] = useState({});
 
   const categories = [
@@ -114,31 +116,53 @@ export default function DriverTable({ drivers, handleApproved }) {
                 </div>
               </td>
               <td className="flex gap-2 px-6 py-4 whitespace-nowrap">
-                <Link
-                  className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
-                  to={`/home/driver/${driver.id}`}
-                >
-                  View
-                </Link>
-                <button
-                  className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded"
-                  onClick={() => handleApproved(driver.id)}
-                >
-                  {driver.isApprovedDriver ? "Disable" : "Approve"}
-                </button>
-                <DatePicker
-                  selected={selectedDates[driver.email]}
-                  onChange={(date) => handleDateChange(date, driver.email)}
-                  minDate={new Date()} 
-                  placeholderText="Select a future date"
-                  className="text-black"
-                />
-                <button
-                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                  onClick={() => sendSchedule(driver.email)}
-                >
-                  Send Schedule
-                </button>
+                {location.pathname === "/home/drivers" && (
+                  <>
+                    <Link
+                      className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
+                      to={`/home/driver/${driver.id}`}
+                    >
+                      View
+                    </Link>
+                    <button
+                      className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded"
+                      onClick={() => handleApproved(driver.id)}
+                    >
+                      {driver.isApprovedDriver ? "Disable" : "Approve"}
+                    </button>
+                  </>
+                )}
+                {location.pathname === "/home/schedules" &&
+                !driver.isApprovedDriver ? (
+                  <>
+                    <Link
+                      className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
+                      to={`/home/driver/${driver.id}`}
+                    >
+                      View
+                    </Link>
+                    <DatePicker
+                      selected={selectedDates[driver.email]}
+                      onChange={(date) => handleDateChange(date, driver.email)}
+                      minDate={new Date()}
+                      placeholderText="Select a future date"
+                      className="text-black"
+                    />
+                    <button
+                      className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                      onClick={() => sendSchedule(driver.email)}
+                    >
+                      Send Schedule
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
+                    to={`/home/driver/${driver.id}`}
+                  >
+                    View
+                  </Link>
+                )}
               </td>
             </tr>
           ))}

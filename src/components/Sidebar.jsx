@@ -7,6 +7,7 @@ import {
   IoPersonOutline,
   IoAlertCircleOutline,
   IoExitOutline,
+  IoCalendarOutline,
 } from "react-icons/io5";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
@@ -38,6 +39,11 @@ export default function Sidebar() {
       path: "/home/users",
     },
     {
+      name: "Schedules",
+      icon: <IoCalendarOutline />,
+      path: "/home/schedules",
+    },
+    {
       name: "Reports",
       icon: <IoAlertCircleOutline />,
       path: "/home/reports",
@@ -49,14 +55,14 @@ export default function Sidebar() {
 
     toast.success("You have successfully logged out!");
     signOut(auth);
-    navigate("/");
+    navigate("/", { replace: true });
   };
 
   return (
     <aside className="flex flex-col justify-between bg-gray-200 min-h-screen p-2 w-full max-w-[50px] xl:max-w-[200px]">
       <div>
         <div className="p-2 flex items-center flex-row gap-2">
-          <IoPersonCircleOutline className="text-gray-600 text-xl" size={60}/>
+          <IoPersonCircleOutline className="text-gray-600 text-xl" size={60} />
           <h1 className="hidden xl:block text-lg font-bold text-gray-600 mb-3">
             Ridemoto Admin
           </h1>
@@ -85,7 +91,7 @@ export default function Sidebar() {
         className="w-full bg-red-500 hover:bg-red-700 text-white font-bold flex items-center p-2 rounded gap-2"
         onClick={handleLogout}
       >
-        <IoExitOutline/>
+        <IoExitOutline />
         <span className="hidden xl:block">Logout</span>
       </button>
     </aside>
