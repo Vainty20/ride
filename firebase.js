@@ -4,13 +4,13 @@ import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCnx9Xal0ySxex6HqD5c0SaPqEpuftLTo0",
-  authDomain: "ridemoto-5140d.firebaseapp.com",
-  projectId: "ridemoto-5140d",
-  storageBucket: "ridemoto-5140d.appspot.com",
-  messagingSenderId: "811027902245",
-  appId: "1:811027902245:web:52c8e3a5c3cd5feefff4cc",
-  measurementId: "9H5ZS0MR10"
+  apiKey: "AIzaSyA02qQLG8KEayuFUaoRh-srkSYX8GBtqkg",
+  authDomain: "angkasv2.firebaseapp.com",
+  projectId: "angkasv2",
+  storageBucket: "angkasv2.appspot.com",
+  messagingSenderId: "167136779991",
+  appId: "1:167136779991:web:f6e327297eac3cc9bd1a92",
+  measurementId: "G-0GJ2DSRDPN"
 };
 
 const app = initializeApp(firebaseConfig);
