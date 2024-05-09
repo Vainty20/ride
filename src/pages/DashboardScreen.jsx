@@ -41,9 +41,6 @@ export default function DashboardScreen() {
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalAppIncome, setTotalAppIncome] = useState(0);
   const [totalDriverIncome, setTotalDriverIncome] = useState(0);
-  const [aggregatedDriversByMonth, setAggregatedDriversByMonth] = useState([]);
-  const [aggregatedUsersByMonth, setAggregatedUsersByMonth] = useState([]);
-  const [aggregatedBooksByMonth, setAggregatedBooksByMonth] = useState([]);
 
   useEffect(() => {
     const incomeData = {};
@@ -88,35 +85,11 @@ export default function DashboardScreen() {
     setTotalDriverIncome(driverIncome);
   }, [books]);
 
-  useEffect(() => {
-    const aggregateDataByMonth = (data) => {
-      const aggregatedData = {};
-
-      data.forEach((item) => {
-        const monthYearKey = `${new Date(item.timestamp).getFullYear()}-${
-          new Date(item.timestamp).getMonth() + 1
-        }`;
-        if (aggregatedData[monthYearKey]) {
-          aggregatedData[monthYearKey]++;
-        } else {
-          aggregatedData[monthYearKey] = 1;
-        }
-      });
-
-      return Object.keys(aggregatedData).map((monthYear) => ({
-        month: monthNames[parseInt(monthYear.split("-")[1]) - 1],
-        count: aggregatedData[monthYear],
-      }));
-    };
-
-    const aggregatedDrivers = aggregateDataByMonth(drivers);
-    const aggregatedUsers = aggregateDataByMonth(users);
-    const aggregatedBooks = aggregateDataByMonth(books);
-
-    setAggregatedDriversByMonth(aggregatedDrivers);
-    setAggregatedUsersByMonth(aggregatedUsers);
-    setAggregatedBooksByMonth(aggregatedBooks);
-  }, [drivers, users, books]);
+  const approvedDriversCount = drivers.filter(
+    (driver) => driver.isApprovedDriver
+  ).length;
+  const approvedUsersCount = users.filter((user) => user.isApproved).length;
+  const booksWithDropoffCount = books.filter((book) => book.isDropoff).length;
   if (loadingUser && loadingDriver && loadingBook) return <Loading />;
 
   return (
@@ -159,14 +132,18 @@ export default function DashboardScreen() {
 
       <div className="flex justify-center gap-2">
         <div className="w-full bg-gray-200 rounded-lg p-3 mb-6">
-          <h2 className="text-xl font-semibold mb-2 text-gray-700">
-            Drivers by Month
-          </h2>
+          <h2 className="text-xl font-semibold mb-2 text-gray-700">Drivers</h2>
           <ResponsiveContainer width="100%" height={400}>
             <PieChart>
               <Pie
                 dataKey="count"
-                data={aggregatedDriversByMonth}
+                data={[
+                  { name: "Approved Drivers", count: approvedDriversCount },
+                  {
+                    name: "Non-Approved Drivers",
+                    count: drivers.length - approvedDriversCount,
+                  },
+                ]}
                 cx="50%"
                 cy="50%"
                 outerRadius={80}
@@ -180,14 +157,18 @@ export default function DashboardScreen() {
         </div>
 
         <div className="w-full bg-gray-200 rounded-lg p-3 mb-6">
-          <h2 className="text-xl font-semibold mb-2 text-gray-700">
-            Users by Month
-          </h2>
+          <h2 className="text-xl font-semibold mb-2 text-gray-700">Users</h2>
           <ResponsiveContainer width="100%" height={400}>
             <PieChart>
               <Pie
                 dataKey="count"
-                data={aggregatedUsersByMonth}
+                data={[
+                  { name: "Approved Users", count: approvedUsersCount },
+                  {
+                    name: "Non-Approved Users",
+                    count: users.length - approvedUsersCount,
+                  },
+                ]}
                 cx="50%"
                 cy="50%"
                 outerRadius={80}
@@ -201,14 +182,15 @@ export default function DashboardScreen() {
         </div>
 
         <div className="w-full bg-gray-200 rounded-lg p-3 mb-6">
-          <h2 className="text-xl font-semibold mb-2 text-gray-700">
-            Books by Month
-          </h2>
+          <h2 className="text-xl font-semibold mb-2 text-gray-700">Books</h2>
           <ResponsiveContainer width="100%" height={400}>
             <PieChart>
               <Pie
                 dataKey="count"
-                data={aggregatedBooksByMonth}
+                data={[
+                  { name: "With Drop-off", count: booksWithDropoffCount },
+                  { name: "Without Drop-off", count: books.length - booksWithDropoffCount },
+                ]}
                 cx="50%"
                 cy="50%"
                 outerRadius={80}
