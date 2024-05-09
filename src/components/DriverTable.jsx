@@ -133,7 +133,7 @@ export default function DriverTable({ drivers, handleApproved }) {
                   </>
                 )}
                 {location.pathname === "/home/schedules" &&
-                !driver.isApprovedDriver ? (
+                (!driver.isApprovedDriver ? (
                   <>
                     <Link
                       className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
@@ -162,7 +162,7 @@ export default function DriverTable({ drivers, handleApproved }) {
                   >
                     View
                   </Link>
-                )}
+                ))}
               </td>
             </tr>
           ))}
