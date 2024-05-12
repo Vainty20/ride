@@ -14,35 +14,49 @@ export default function DriverTable({ drivers, handleApproved }) {
     { title: "Last Name" },
     { title: "Contact Number" },
     { title: "Motorcycle Model" },
-    { title: "Motorcycle Reg No." },
+    { title: "Plate Number" },
     { title: "Motorcycle Max Load" },
     { title: "isApprovedDriver" },
   ];
 
   const sendSchedule = async (email) => {
     try {
-      const selectedDate = selectedDates[email];
-      if (!selectedDate) {
-        alert("Please select a date");
+      const selectedDateTime = selectedDates[email];
+      if (!selectedDateTime) {
+        alert("Please select a date and time");
         return;
       }
 
       const currentDate = new Date();
-      if (selectedDate <= currentDate) {
-        alert("Please select a future date");
+      if (selectedDateTime <= currentDate) {
+        alert("Please select a future date and time");
         return;
       }
+
+      const selectedDate = selectedDateTime.toLocaleDateString();
+      const selectedTime = selectedDateTime.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
       await sendEmail({
         to_email: email,
-        subject: "Ridemoto Driver's Schedule",
-        message: `Hello there, your evaluation appointment is set for ${selectedDate.toLocaleDateString()}. Please bring:
-        1. Completed application form
-        2. Driver's license
-        3. Motorcycle for assessment
+        subject: "Evaluation Appointment Confirmation for Ride Moto",
+        message: `
+        We are pleased to inform you that your evaluation appointment for the Ride Moto application has been scheduled.
+         
+        Date: ${selectedDate}
+        Time: ${selectedTime}   
+
+        To ensure a smooth evaluation process, please make sure to bring the following documents:
+
+        1. Valid driver's license
+        2. Original copy of your motorcycle's OR/CR (Official Receipt/Certificate of Registration) along with one photocopy
+        3. Your motorcycle for assessment purposes
         
-        Arrive 15 mins early for paperwork.
+        We kindly request that you arrive at least 15 minutes before your scheduled time. This will allow you ample time to complete the necessary application forms and other paperwork prior to your evaluation.
         
-        Looking forward to meeting you.`,
+        We look forward to seeing you at your scheduled appointment and wish you the best of luck with your evaluation.`,
       });
       alert("Email sent successfully");
     } catch (error) {
@@ -133,36 +147,43 @@ export default function DriverTable({ drivers, handleApproved }) {
                   </>
                 )}
                 {location.pathname === "/home/schedules" &&
-                (!driver.isApprovedDriver ? (
-                  <>
+                  (!driver.isApprovedDriver ? (
+                    <>
+                      <Link
+                        className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
+                        to={`/home/driver/${driver.id}`}
+                      >
+                        View
+                      </Link>
+                      <DatePicker
+                        selected={selectedDates[driver.email]}
+                        onChange={(date) =>
+                          handleDateChange(date, driver.email)
+                        }
+                        minDate={new Date()}
+                        placeholderText="Select a future date"
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={30}
+                        timeCaption="Time"
+                        dateFormat="MMMM d, yyyy h:mm aa"
+                        className="text-black"
+                      />
+                      <button
+                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                        onClick={() => sendSchedule(driver.email)}
+                      >
+                        Send Schedule
+                      </button>
+                    </>
+                  ) : (
                     <Link
                       className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
                       to={`/home/driver/${driver.id}`}
                     >
                       View
                     </Link>
-                    <DatePicker
-                      selected={selectedDates[driver.email]}
-                      onChange={(date) => handleDateChange(date, driver.email)}
-                      minDate={new Date()}
-                      placeholderText="Select a future date"
-                      className="text-black"
-                    />
-                    <button
-                      className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                      onClick={() => sendSchedule(driver.email)}
-                    >
-                      Send Schedule
-                    </button>
-                  </>
-                ) : (
-                  <Link
-                    className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
-                    to={`/home/driver/${driver.id}`}
-                  >
-                    View
-                  </Link>
-                ))}
+                  ))}
               </td>
             </tr>
           ))}

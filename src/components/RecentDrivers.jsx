@@ -9,7 +9,7 @@ export default function RecentDrivers({ drivers }) {
             <th className="px-4 py-2">First Name</th>
             <th className="px-4 py-2">Last Name</th>
             <th className="px-4 py-2">Contact Number</th>
-            <th className="px-4 py-2">Motorcycle Reg No.</th>
+            <th className="px-4 py-2">Plate Number</th>
           </tr>
         </thead>
         <tbody>
