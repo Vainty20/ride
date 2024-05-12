@@ -23,7 +23,7 @@ export default function ViewBookScreen() {
   const { driver, loading: driverLoading } = useFetchDriverData({ id: book?.driverId });
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: "AIzaSyD_1DfvG_eN5x0NYjLkm3aPRsm7sYk0Dz8",
+    googleMapsApiKey: "AIzaSyDsI_k4OBMY-fjpG-PYSlaAJNcG1VlI3mY",
   });
 
   return (
