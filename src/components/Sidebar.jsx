@@ -24,7 +24,7 @@ export default function Sidebar() {
       path: "/home",
     },
     {
-      name: "Books",
+      name: "Bookings",
       icon: <IoBookOutline />,
       path: "/home/books",
     },

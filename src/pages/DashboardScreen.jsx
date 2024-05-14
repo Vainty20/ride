@@ -323,7 +323,6 @@ export default function DashboardScreen() {
             onChange={(e) => handleChangeFilterType(e.target.value)}
           >
             <option value="monthly">Monthly</option>
-            <option value="daily">Daily</option>
             <option value="weekly">Weekly</option>
           </select>
         </div>

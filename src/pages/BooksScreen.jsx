@@ -59,7 +59,7 @@ export default function BooksScreen() {
         <Loading />
       ) : (
         <>
-          <h1 className="mb-4 text-3xl font-semibold">Books Page</h1>
+          <h1 className="mb-4 text-3xl font-semibold">Bookings Page</h1>
           <form className="mb-4">
             <Searchbar
               searchTerm={searchTerm}
