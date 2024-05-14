@@ -20,18 +20,8 @@ import RecentUsers from "../components/RecentUsers";
 import RecentDrivers from "../components/RecentDrivers";
 
 const monthNames = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 
 const dailyNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -64,10 +54,7 @@ export default function DashboardScreen() {
       const dayKey = dailyNames[date.getDay()];
       const weekYearKey = `${date.getFullYear()}-${getWeekNumber(date)}`;
 
-      const ridePriceInt = parseInt(
-        booking.ridePrice.replace("₱", "").trim(),
-        10
-      );
+      const ridePriceInt = parseInt(booking.ridePrice.replace("₱", "").trim(), 10);
 
       if (incomeData[monthYearKey]) {
         incomeData[monthYearKey] += ridePriceInt;
@@ -112,11 +99,9 @@ export default function DashboardScreen() {
     }
 
     setFilteredIncomeData(
-      incomeType === "monthly"
-        ? chartData
-        : incomeType === "daily"
-        ? dailyChartData
-        : weeklyChartData
+      incomeType === "monthly" ? chartData :
+      incomeType === "daily" ? dailyChartData :
+      weeklyChartData
     );
 
     let totalIncome = 0;
@@ -137,7 +122,7 @@ export default function DashboardScreen() {
           total + parseInt(book.ridePrice.replace("₱", "").trim(), 10),
         0
       );
-      return { ...driver, totalIncome: driverTotalIncome };
+      return { ...driver, totalIncome: driverTotalIncome, topDate: driverBooks.length ? driverBooks[0].timestamp : null };
     });
 
     const sortedDrivers = [...updatedDrivers];
@@ -155,18 +140,12 @@ export default function DashboardScreen() {
   };
 
   const filteredTopDrivers = topDrivers.filter((driver) => {
-    if (
-      filterType === "monthly" ||
-      filterType === "daily" ||
-      filterType === "weekly"
-    ) {
+    if (filterType === "monthly" || filterType === "daily" || filterType === "weekly") {
       return driver.totalIncome !== undefined && driver.totalIncome !== 0;
     }
   });
 
-  const approvedDriversCount = drivers.filter(
-    (driver) => driver.isApprovedDriver
-  ).length;
+  const approvedDriversCount = drivers.filter((driver) => driver.isApprovedDriver).length;
   const approvedUsersCount = users.filter((user) => user.isApproved).length;
   const booksWithDropoffCount = books.filter((book) => book.isDropoff).length;
 
@@ -331,6 +310,13 @@ export default function DashboardScreen() {
             <div key={driver.driverId} className="text-gray-700">
               {`${index + 1}. ${driver.firstName}`} - Total Income:{" "}
               {`₱${driver.totalIncome.toFixed(2)}`}
+              {driver.topDate && (
+                <div className="text-sm text-gray-500">
+                  {filterType === "monthly" ? 
+                    `Month: ${monthNames[new Date(driver.topDate).getMonth()]}` :
+                    `Week: ${getWeekNumber(new Date(driver.topDate))}`}
+                </div>
+              )}
             </div>
           ))}
         </ul>
