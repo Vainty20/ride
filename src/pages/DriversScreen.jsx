@@ -6,17 +6,39 @@ import Searchbar from "../components/Searchbar";
 import Pagination from "../components/Pagination";
 import ItemsPerPage from "../components/ItemsPerPage";
 import { db } from "../../firebase";
-import { updateDoc, doc, getDoc } from "firebase/firestore";
+import { updateDoc, doc, getDoc, addDoc, collection } from "firebase/firestore";
 
 export default function DriversScreen() {
   const { drivers, loading, fetchDrivers } = useFetchAllDriversData();
   const [searchTerm, setSearchTerm] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
+  const [newMotor, setNewMotor] = useState(""); // State for new motor input
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
     setCurrentPage(1);
+  };
+
+  const handleMotorChange = (event) => {
+    setNewMotor(event.target.value);
+  };
+
+  const handleAddMotor = async () => {
+    if (newMotor.trim() === "") {
+      alert("Motor name cannot be empty.");
+      return;
+    }
+
+    try {
+      const motorsCollectionRef = collection(db, "motors");
+      await addDoc(motorsCollectionRef, { name: newMotor });
+      alert("Motor added successfully!");
+      setNewMotor("");
+      // If needed, fetch motors or update state here
+    } catch (error) {
+      alert("Error adding motor: ", error);
+    }
   };
 
   const filteredDrivers = drivers.filter((driver) => {
@@ -68,7 +90,24 @@ export default function DriversScreen() {
         <Loading />
       ) : (
         <>
-          <h1 className="mb-4 text-3xl font-semibold">Drivers Page</h1>
+          <div className="flex justify-between">
+            <h1 className="mb-4 text-3xl font-semibold">Drivers Page</h1>
+            <div>
+              <input
+                type="text"
+                value={newMotor}
+                onChange={handleMotorChange}
+                placeholder="Enter new motor name"
+                className="border p-2 mr-2 rounded text-gray-700"
+              />
+              <button
+                onClick={handleAddMotor}
+                className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
+              >
+                Add Motor
+              </button>
+            </div>
+          </div>
           <form className="mb-4">
             <Searchbar
               searchTerm={searchTerm}
